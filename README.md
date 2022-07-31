@@ -49,6 +49,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 1. add input validation
 2. support whitelist
 3. support external_link
+4. add examples
 
 ## Notes
 Project Folder:
@@ -149,11 +150,16 @@ if i only generate this json, i don't even need to connect keplr !!!
 overall goal is to eliminate usage of cli (yarn xxx) for creators.
 
 1. enter basic info (name, description, symbol and IPFS link to main image)
-    replace enter these info in config.js
-2. add assets to generate images.car
-    replace yarn pack-images
-    manually upload to nft.storage
-3. add metadata (contains ipfs of images) to generate metadata.car
-    yarn pack-metadata
-    manually upload to nft.storage
-4. 
+  replace enter these info in config.js
+2. enter nft.storage api key
+3. add assets to generate images.car
+  replace `yarn pack-images` and upload to nft.storage
+  manually upload to nft.storage
+4. add metadata (contains ipfs of images) to generate metadata.car
+  replace `yarn pack-metadata` and upload to nft.storage
+5. no user op
+  set metadata ipfs link to baseTokenUri in config.js
+6. whitelist TODO
+7. click mint! get the json output
+  replace `yarn minter`
+9. go to launch ([testnet](https://testnet.publicawesome.dev/tx), [mainnet](https://app.stargaze.zone/tx)) and paste the output, sign with keplr.

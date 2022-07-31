@@ -1,5 +1,5 @@
-import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
 
 import "./styles.css";
 
@@ -7,65 +7,81 @@ type Inputs = {
   name: string,
   symbol: string,
   description: string,
-  mainImage: string
+  mainImage: File[],
+  imageDirectory: File[],
+  metadataDirectory: File[],
 };
 
-// function App() {
-//   const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
-//   const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
-
-//   console.log(watch("example")) // watch input value by passing the name of it
-
-//   return (
-//     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
-//     <form onSubmit={handleSubmit(onSubmit)}>
-//       {/* register your input into the hook by invoking the "register" function */}
-//       <input defaultValue="test" {...register("example")} />
-      
-//       {/* include validation with required or other standard HTML validation rules */}
-//       <input {...register("exampleRequired", { required: true })} />
-//       {/* errors will return when field validation fails  */}
-//       {errors.exampleRequired && <span>This field is required</span>}
-      
-//       <input type="submit" />
-//     </form>
-//   );
-// }
 function App() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors }
   } = useForm<Inputs>();
 
   const onSubmitFunc = (data: Inputs) => {
     alert(JSON.stringify(data));
-
     console.log(data.mainImage[0])
+    console.log(data.imageDirectory[0])
+    console.log(data.metadataDirectory[0])
   }
+
+  const imageDirectoryRef = useRef<HTMLInputElement | null>(null);
+  useEffect(() => {
+    if (imageDirectoryRef.current !== null) {
+      imageDirectoryRef.current.setAttribute("directory", "");
+      imageDirectoryRef.current.setAttribute("webkitdirectory", "");
+    }
+  }, [imageDirectoryRef]);
+
+  const { ref: r1, ...rest1 } = register("imageDirectory", { required: true })
+
+  const metadataDirectoryRef = useRef<HTMLInputElement | null>(null);
+  useEffect(() => {
+    if (metadataDirectoryRef.current !== null) {
+      metadataDirectoryRef.current.setAttribute("directory", "");
+      metadataDirectoryRef.current.setAttribute("webkitdirectory", "");
+    }
+  }, [metadataDirectoryRef]);
+
+  const { ref: r2, ...rest2 } = register("metadataDirectory", { required: true })
+
 
   return (
     <form
       onSubmit={handleSubmit(onSubmitFunc)}
     >
       <label>Name</label>
-      <input {...register("name", { required: true})}/>
+      <input {...register("name", { required: true })} />
       {errors.name && <p>This field is required</p>}
 
       <label>Symbol</label>
-      <input {...register("symbol", { required: true})}/>
+      <input {...register("symbol", { required: true })} />
       {errors.symbol && <p>This field is required</p>}
 
       <label>Description</label>
-      <input {...register("description", { required: true})}/>
+      <input {...register("description", { required: true })} />
       {errors.description && <p>This field is required</p>}
 
-      <label>Main Image IPFS Link</label>
-      <input {...register("mainImage", { required: true})}/>
+      <label>Main Image</label>
+      <input {...register("mainImage", { required: true })} type="file" />
       {errors.mainImage && <p>This field is required</p>}
 
-      <input type="submit" />
+      <label>Image Directory</label>
+      <input {...rest1} type="file" ref={(e) => {
+        r1(e)
+        imageDirectoryRef.current = e
+      }} />
+      {errors.imageDirectory && <p>This field is required</p>}
+
+      <label>Metadata Directory</label>
+      <input {...rest2} type="file" ref={(e) => {
+        r2(e)
+        metadataDirectoryRef.current = e
+      }} />
+      {errors.metadataDirectory && <p>This field is required</p>}
+
+      <input type="submit" value={"generate json!"} />
     </form>
   );
 }
