@@ -7,6 +7,7 @@ type Inputs = {
   name: string,
   symbol: string,
   description: string,
+  nftStorageApiKey: string,
   mainImage: File[],
   imageDirectory: File[],
   metadataDirectory: File[],
@@ -62,6 +63,10 @@ function App() {
       <label>Description</label>
       <input {...register("description", { required: true })} />
       {errors.description && <p>This field is required</p>}
+
+      <label>nft.storage API key</label>
+      <input {...register("nftStorageApiKey", { required: true })} />
+      {errors.nftStorageApiKey && <p>This field is required</p>}
 
       <label>Main Image</label>
       <input {...register("mainImage", { required: true })} type="file" />
