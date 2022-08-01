@@ -50,6 +50,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 2. support whitelist
 3. support external_link
 4. add examples
+5. same nft.storage used for second time, do we need to clenaup? `nft-storage-clean.ts`
 
 ## Notes
 Project Folder:

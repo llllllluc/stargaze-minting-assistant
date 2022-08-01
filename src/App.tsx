@@ -1,30 +1,24 @@
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 
+import {FormInputs} from "./schema"
 import "./styles.css";
+import {nftStorageUpload} from "./stargaze-tools/nft-storage-upload"
 
-type Inputs = {
-  name: string,
-  symbol: string,
-  description: string,
-  nftStorageApiKey: string,
-  mainImage: File[],
-  imageDirectory: File[],
-  metadataDirectory: File[],
-};
 
 function App() {
   const {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<Inputs>();
+  } = useForm<FormInputs>();
 
-  const onSubmitFunc = (data: Inputs) => {
+  const onSubmitFunc = (data: FormInputs) => {
     alert(JSON.stringify(data));
-    console.log(data.mainImage[0])
-    console.log(data.imageDirectory[0])
-    console.log(data.metadataDirectory[0])
+    // console.log(data.mainImage[0])
+    // console.log(data.imageDirectory[0])
+    // console.log(data.metadataDirectory[0])
+    nftStorageUpload(data)
   }
 
   const imageDirectoryRef = useRef<HTMLInputElement | null>(null);
