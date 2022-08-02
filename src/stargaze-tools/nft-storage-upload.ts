@@ -3,10 +3,9 @@ import { naturalCompare } from './utils/sort';
 import { checkFiles, validateMetadata } from './utils/validation';
 import { FormInputs } from '../schema';
 
-export async function nftStorageUpload(config: FormInputs) {
+export async function nftStorageUpload(config: FormInputs): Promise<string[]> {
   // Configure NFT.storage
-  const token = config.nftStorageApiKey;
-  const client = new NFTStorage({ token });
+  const client = new NFTStorage({ token: config.nftStorageApiKey });
 
   // console.log(
   //   'Deploying files to IPFS via NFT.storage using the following configuration:'
@@ -28,6 +27,7 @@ export async function nftStorageUpload(config: FormInputs) {
 
   // // Upload images folder
   const imagesBaseUri = await client.storeDirectory(config.imageDirectory);
+  const mainImageUri = `ipfs://${imagesBaseUri}/images/${config.mainImage.item(0)?.name}`; 
 
   const metadataWithImageIPFS: File[] = []
   // Update metadata with IPFS hashes
@@ -63,5 +63,5 @@ export async function nftStorageUpload(config: FormInputs) {
   console.log('Set this field in your config.js file: ');
   console.log('baseTokenUri: ', baseTokenUri);
 
-  return baseTokenUri;
+  return [mainImageUri, baseTokenUri];
 }
