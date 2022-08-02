@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 export const checkFiles = (images: File[], metadata: File[]) => {
   // Check images length is equal to metadata length
   if (images.length !== metadata.length) {

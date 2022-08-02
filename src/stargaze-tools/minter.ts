@@ -9,168 +9,168 @@ import { FormInputs } from '../schema';
 const NEW_COLLECTION_FEE = coins('1000000000', 'ustars');
 
 function isValidIpfsUrl(uri: string) {
-  let url;
+    let url;
 
-  try {
-    url = new URL(uri);
-  } catch (_) {
-    return false;
-  }
+    try {
+        url = new URL(uri);
+    } catch (_) {
+        return false;
+    }
 
-  return url.protocol === 'ipfs:';
+    return url.protocol === 'ipfs:';
 }
 
 function clean(obj: any) {
-  for (var propName in obj) {
-    if (obj[propName] === null || obj[propName] === undefined) {
-      delete obj[propName];
+    for (var propName in obj) {
+        if (obj[propName] === null || obj[propName] === undefined) {
+            delete obj[propName];
+        }
     }
-  }
-  return obj;
+    return obj;
 }
 
 function formatRoyaltyInfo(
-  royaltyPaymentAddress: null | string,
-  royaltyShare: string
+    royaltyPaymentAddress: null | string,
+    royaltyShare: string
 ) {
-  if (royaltyPaymentAddress === null) {
-    return null;
-  } else {
-    if (royaltyShare === undefined || royaltyShare == '') {
-      throw new Error('royaltyPaymentAddress present, but no royaltyShare');
+    if (royaltyPaymentAddress === null) {
+        return null;
+    } else {
+        if (royaltyShare === undefined || royaltyShare == '') {
+            throw new Error('royaltyPaymentAddress present, but no royaltyShare');
+        }
+        return { payment_address: royaltyPaymentAddress, share: royaltyShare };
     }
-    return { payment_address: royaltyPaymentAddress, share: royaltyShare };
-  }
 }
 
 export async function init(mainImageUri: string, baseTokenUri: string, config: FormInputs) {
-  console.log('Collection name:', name);
-  console.log('Account:', config.account, '\n');
-  const account = toStars(config.account);
-//   const whitelistContract = config.whitelistContract
-//     ? toStars(config.whitelistContract)
-//     : null;
-const whitelistContract = null
-//   const royaltyPaymentAddress = config.royaltyPaymentAddress
-//     ? toStars(config.royaltyPaymentAddress)
-//     : null;
-const royaltyPaymentAddress = null
-  const royaltyInfo = formatRoyaltyInfo(
-    royaltyPaymentAddress,
-    // config.royaltyShare
-    ""
-  );
+    console.log('Collection name:', name);
+    console.log('Account:', config.account, '\n');
+    const account = toStars(config.account);
+    //   const whitelistContract = config.whitelistContract
+    //     ? toStars(config.whitelistContract)
+    //     : null;
+    const whitelistContract = null
+    //   const royaltyPaymentAddress = config.royaltyPaymentAddress
+    //     ? toStars(config.royaltyPaymentAddress)
+    //     : null;
+    const royaltyPaymentAddress = null
+    const royaltyInfo = formatRoyaltyInfo(
+        royaltyPaymentAddress,
+        // config.royaltyShare
+        ""
+    );
 
-  if (!isValidIpfsUrl(baseTokenUri)) {
-    throw new Error('Invalid base token URI');
-  }
+    if (!isValidIpfsUrl(baseTokenUri)) {
+        throw new Error('Invalid base token URI');
+    }
 
-  if (!isValidIpfsUrl(mainImageUri) && !isValidHttpUrl(mainImageUri)) {
-    throw new Error('Image link is not valid. Must be IPFS or http(s)');
-  }
+    if (!isValidIpfsUrl(mainImageUri) && !isValidHttpUrl(mainImageUri)) {
+        throw new Error('Image link is not valid. Must be IPFS or http(s)');
+    }
 
-  if (config.numTokens > 10_000) {
-    throw new Error('Too many tokens');
-  }
+    if (config.numTokens > 10_000) {
+        throw new Error('Too many tokens');
+    }
 
-  if (!config.perAddressLimit || config.perAddressLimit === 0) {
-    throw new Error('perAddressLimit must be defined and greater than 0');
-  }
+    if (!config.perAddressLimit || config.perAddressLimit === 0) {
+        throw new Error('perAddressLimit must be defined and greater than 0');
+    }
 
-  if (
-    royaltyInfo &&
-    Decimal.fromUserInput(royaltyInfo?.share, 3).isGreaterThan(
-      Decimal.fromUserInput('0.100', 3)
-    )
-  ) {
-    throw new Error("Royalty share must be lower than or equal to '0.100'");
-  }
+    if (
+        royaltyInfo &&
+        Decimal.fromUserInput(royaltyInfo?.share, 3).isGreaterThan(
+            Decimal.fromUserInput('0.100', 3)
+        )
+    ) {
+        throw new Error("Royalty share must be lower than or equal to '0.100'");
+    }
 
-//   const client = await getClient();
+    //   const client = await getClient();
 
-  // time expressed in nanoseconds (1 millionth of a millisecond)
-  const startTime: Timestamp = (
-    new Date(config.startTime).getTime() * 1_000_000
-  ).toString();
+    // time expressed in nanoseconds (1 millionth of a millisecond)
+    const startTime: Timestamp = (
+        new Date(config.startTime).getTime() * 1_000_000
+    ).toString();
 
-  const tempMsg: InstantiateMsg = {
-    base_token_uri: baseTokenUri,
-    num_tokens: config.numTokens,
-    sg721_code_id: 1, // hardcode to 1 for now. TODO: double check if it's possible to use other contract
-    sg721_instantiate_msg: {
-      name: config.name,
-      symbol: config.symbol,
-      minter: account,
-      collection_info: {
-        creator: account,
-        description: config.description,
-        image: mainImageUri,
-        // external_link: config.external_link,
-        external_link: null,
-        royalty_info: royaltyInfo,
-      },
-    },
-    per_address_limit: config.perAddressLimit,
-    whitelist: whitelistContract,
-    start_time: startTime,
-    unit_price: {
-      amount: (config.unitPrice * 1000000).toString(),
-      denom: 'ustars',
-    },
-  };
+    const tempMsg: InstantiateMsg = {
+        base_token_uri: baseTokenUri,
+        num_tokens: config.numTokens,
+        sg721_code_id: 1, // hardcode to 1 for now. TODO: double check if it's possible to use other contract
+        sg721_instantiate_msg: {
+            name: config.name,
+            symbol: config.symbol,
+            minter: account,
+            collection_info: {
+                creator: account,
+                description: config.description,
+                image: mainImageUri,
+                // external_link: config.external_link,
+                external_link: null,
+                royalty_info: royaltyInfo,
+            },
+        },
+        per_address_limit: config.perAddressLimit,
+        whitelist: whitelistContract,
+        start_time: startTime,
+        unit_price: {
+            amount: (config.unitPrice * 1000000).toString(),
+            denom: 'ustars',
+        },
+    };
 
-  if (
-    tempMsg.sg721_instantiate_msg.collection_info?.royalty_info
-      ?.payment_address === undefined &&
-    tempMsg.sg721_instantiate_msg.collection_info?.royalty_info?.share ===
-      undefined
-  ) {
-    tempMsg.sg721_instantiate_msg.collection_info.royalty_info = null;
-  }
-  const msg = clean(tempMsg);
+    if (
+        tempMsg.sg721_instantiate_msg.collection_info?.royalty_info
+            ?.payment_address === undefined &&
+        tempMsg.sg721_instantiate_msg.collection_info?.royalty_info?.share ===
+        undefined
+    ) {
+        tempMsg.sg721_instantiate_msg.collection_info.royalty_info = null;
+    }
+    const msg = clean(tempMsg);
 
-//   // Get confirmation before preceding
-//   console.log(
-//     'Please confirm the settings for your minter and collection. THERE IS NO WAY TO UPDATE THIS ONCE IT IS ON CHAIN.'
-//   );
-const msgJsonString = JSON.stringify(msg, null, 2)
-  console.log(msgJsonString);
-  console.log(
-    'Cost of minter instantiation: ' +
-      NEW_COLLECTION_FEE[0].amount +
-      ' ' +
-      NEW_COLLECTION_FEE[0].denom
-  );
-return msgJsonString
+    //   // Get confirmation before preceding
+    //   console.log(
+    //     'Please confirm the settings for your minter and collection. THERE IS NO WAY TO UPDATE THIS ONCE IT IS ON CHAIN.'
+    //   );
+    const msgJsonString = JSON.stringify(msg, null, 2)
+    console.log(msgJsonString);
+    console.log(
+        'Cost of minter instantiation: ' +
+        NEW_COLLECTION_FEE[0].amount +
+        ' ' +
+        NEW_COLLECTION_FEE[0].denom
+    );
+    return msgJsonString
 
-//   const answer = await inquirer.prompt([
-//     {
-//       message: 'Ready to submit the transaction?',
-//       name: 'confirmation',
-//       type: 'confirm',
-//     },
-//   ]);
-//   if (!answer.confirmation) return;
+    //   const answer = await inquirer.prompt([
+    //     {
+    //       message: 'Ready to submit the transaction?',
+    //       name: 'confirmation',
+    //       type: 'confirm',
+    //     },
+    //   ]);
+    //   if (!answer.confirmation) return;
 
-//   const result = await client.instantiate(
-//     account,
-//     config.minterCodeId,
-//     msg,
-//     config.name,
-//     'auto',
-//     { funds: NEW_COLLECTION_FEE, admin: account }
-//   );
-//   const wasmEvent = result.logs[0].events.find((e) => e.type === 'wasm');
-//   console.info(
-//     'The `wasm` event emitted by the contract execution:',
-//     wasmEvent
-//   );
-//   if (wasmEvent != undefined) {
-//     console.info('Add these contract addresses to config.js:');
-//     console.info('minter contract address: ', wasmEvent.attributes[0]['value']);
-//     console.info('sg721 contract address: ', wasmEvent.attributes[5]['value']);
-//     return wasmEvent.attributes[0]['value'];
-//   }
+    //   const result = await client.instantiate(
+    //     account,
+    //     config.minterCodeId,
+    //     msg,
+    //     config.name,
+    //     'auto',
+    //     { funds: NEW_COLLECTION_FEE, admin: account }
+    //   );
+    //   const wasmEvent = result.logs[0].events.find((e) => e.type === 'wasm');
+    //   console.info(
+    //     'The `wasm` event emitted by the contract execution:',
+    //     wasmEvent
+    //   );
+    //   if (wasmEvent != undefined) {
+    //     console.info('Add these contract addresses to config.js:');
+    //     console.info('minter contract address: ', wasmEvent.attributes[0]['value']);
+    //     console.info('sg721 contract address: ', wasmEvent.attributes[5]['value']);
+    //     return wasmEvent.attributes[0]['value'];
+    //   }
 }
 
 // async function setWhitelist(whitelist: string) {

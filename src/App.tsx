@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 
-import {FormInputs} from "./schema"
+import { FormInputs } from "./schema"
 import "./styles.css";
-import {nftStorageUpload} from "./stargaze-tools/nft-storage-upload"
-import {init} from "./stargaze-tools/minter"
+import { nftStorageUpload } from "./stargaze-tools/nft-storage-upload"
+import { init } from "./stargaze-tools/minter"
 
 function App() {
   const {

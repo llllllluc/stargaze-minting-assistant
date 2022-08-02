@@ -27,7 +27,7 @@ export async function nftStorageUpload(config: FormInputs): Promise<string[]> {
 
   // // Upload images folder
   const imagesBaseUri = await client.storeDirectory(config.imageDirectory);
-  const mainImageUri = `ipfs://${imagesBaseUri}/images/${config.mainImage.item(0)?.name}`; 
+  const mainImageUri = `ipfs://${imagesBaseUri}/images/${config.mainImage.item(0)?.name}`;
 
   const metadataWithImageIPFS: File[] = []
   // Update metadata with IPFS hashes
@@ -42,7 +42,7 @@ export async function nftStorageUpload(config: FormInputs): Promise<string[]> {
 
     const metadataJsonString = JSON.stringify(metadataJson)
     // Write updated metadata to tmp folder
-    metadataWithImageIPFS.push(new File([metadataJsonString], file.name, {type: file.type, lastModified: file.lastModified}));
+    metadataWithImageIPFS.push(new File([metadataJsonString], file.name, { type: file.type, lastModified: file.lastModified }));
   });
   await Promise.all(promises)
 
