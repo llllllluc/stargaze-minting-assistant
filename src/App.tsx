@@ -14,12 +14,12 @@ function App() {
   } = useForm<FormInputs>();
 
   const onSubmitFunc = (data: FormInputs) => {
-    alert(JSON.stringify(data));
+    // alert(JSON.stringify(data));
     // console.log(data.mainImage[0])
     // console.log(data.imageDirectory[0])
     // console.log(data.metadataDirectory[0])
     nftStorageUpload(data).then(([mainImageUri, baseTokenUri]) => {
-      init(mainImageUri, baseTokenUri, data)
+      init(mainImageUri, baseTokenUri, data).then(msg => alert(msg))
     });
   }
 
