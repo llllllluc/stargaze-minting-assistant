@@ -48,7 +48,7 @@ function App() {
     <form
       onSubmit={handleSubmit(onSubmitFunc)}
     >
-      <label>Stargaze address, starts with stars</label>
+      <label>Stargaze address, starts with STARS</label>
       <input {...register("account", { required: true })} />
       {errors.account && <p>This field is required</p>}
 
