@@ -53,7 +53,7 @@ Project Folder:
 ```
 
 # TODO
-1. add input validation
+1. add more input validation
 2. support whitelist
 3. support external_link
 4. add examples / videos walk through
