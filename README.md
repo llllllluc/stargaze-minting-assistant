@@ -70,7 +70,7 @@ The overall flow can be seen as combination of below steps / scripts in stargaze
     4. `yarn minter` that takes everything above then generate the JSON result.
 
 ## Some challenges
-1. Biggest challenge is the scripts are made for NodeJS environment, when I try to move it to browser, there were compatibility issues.
+1. Biggest challenge is in order to reuse some validation functions in the scripts, I found scripts are made for NodeJS environment, when I try to make them work in browser, there were compatibility issues.
     1. I remember webpack was broken because there are packages meant for NodeJS environment, if I want to use them in browser I need to tweak a little. I ended up using config-overrides.
     2. File manipulation is different since I need to update metadata files after uploading images to IPFS, in scripts it's intuitive cause we have access to local file system, but in browser, I can only play with `File` object.
 
