@@ -1,5 +1,5 @@
 # Introduction
-As of August 2022, the only way to launch NFT projects (mint NFT, deploy contracts, etc...) on Stargaze is using a series of scripts called [stargaze-tools](https://github.com/public-awesome/stargaze-tools) implemented by Stargazer team, this required creators to update js config file and interact with the script in terminal.
+As of August 2022, the only way to launch NFT projects (mint NFT, deploy contracts, etc...) on Stargaze is using a series of scripts called [stargaze-tools](https://github.com/public-awesome/stargaze-tools) implemented by Stargaze team, this required creators to update js config file and interact with the script in terminal.
 
 This web UI I'm building serves as an alternative of the official cli scripts for Stargaze network. It brings 2 advantages.
 1. Creators no longer need to touch any js config or interact with terminal.
@@ -12,7 +12,7 @@ This web UI I'm building serves as an alternative of the official cli scripts fo
     - This step might sound suspicious at the beginning, why am I asking for API key? 
     - One alternative I thought about is I create an nft.storage account and upload everyone's image / metadata to my account, but I think after all it's better to let creators own these data themselves. Beside this is a pure client side web app, API key is not uploaded to any server (or me, the writer of this app). Anyone can inspect the code to verify.
 4. Click mint and copy the JSON output.
-Once you have the JSON, you can copy that to Stargaze minting page [mainnet](https://app.stargaze.zone/tx) or [testnet](https://testnet.publicawesome.dev/tx) then sign with your Keplr wallet.
+Once you have the JSON, you can copy that to Stargaze minting page [mainnet](https://app.stargaze.zone/tx) or [testnet](https://testnet.publicawesome.dev/tx) then sign with your Keplr wallet. More detail see Stargaze [doc](https://docs.stargaze.zone/guides/readme/9a.-launching-on-mainnet-with-keplr).
 
 
 ## Example folder structures for images and metadata
@@ -71,7 +71,7 @@ The overall flow can be seen as combination of below steps / scripts in stargaze
 
 ## Some challenges
 1. Biggest challenge is the scripts are made for NodeJS environment, when I try to move it to browser, there were compatibility issues.
-    1. I remember webpack was broken and took some time to fix it.
+    1. I remember webpack was broken because there are packages meant for NodeJS environment, if I want to use them in browser I need to tweak a little. I ended up using config-overrides.
     2. File manipulation is different since I need to update metadata files after uploading images to IPFS, in scripts it's intuitive cause we have access to local file system, but in browser, I can only play with `File` object.
 
 
